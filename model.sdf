@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version='1.9'>
+  
+  <model name='x500_lidar_down'>
+    <self_collide>false</self_collide>
+     <include merge='true'>
+      <uri>x500</uri>
+    </include>
+    <include merge='true'>
+      <uri>model://LW20</uri>
+      <pose relative_to="base_link">0 0 -0.079 0 1.57 0</pose>
+    </include>
+    <!-- <include merge='true'>
+      <uri>model://ball_catcher</uri>
+      <pose relative_to="base_link"> 0 0 0.1 0 0 0</pose>
+    </include>  -->
+    <joint name="lidar_model_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>lw20_link</child>
+      <pose relative_to="base_link">-0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="lidar_sensor_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>lidar_sensor_link</child>
+    </joint>
+    <link name="lidar_sensor_link">
+      <pose relative_to="base_link">0 0 -0.05 0 1.57  0</pose>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>0.00001</ixx>
+          <iyy>0.00001</iyy>
+          <izz>0.00001</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <sensor name='lidar' type='gpu_lidar'>"
+        <pose>0 0 0 3.14 0 0</pose>
+        <update_rate>50</update_rate>
+        <ray>
+            <scan>
+                <horizontal>
+                    <samples>1</samples>
+                    <resolution>1</resolution>
+                    <min_angle>0</min_angle>
+                    <max_angle>0</max_angle>
+                </horizontal>
+                <vertical>
+                    <samples>1</samples>
+                    <resolution>1</resolution>
+                    <min_angle>0</min_angle>
+                    <max_angle>0</max_angle>
+                </vertical>
+            </scan>
+            <range>
+                <min>0.1</min>
+                <max>100.0</max>
+                <resolution>0.01</resolution>
+            </range>
+        </ray>
+        <always_on>1</always_on>
+        <visualize>true</visualize>
+      </sensor>
+    </link>
+    <link name='camera_link'>
+      <pose relative_to="camera_joint"/>
+      <inertial>
+        <pose>0 0 0 1.57 0 1.57</pose>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.0000014494</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00000005982</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.000001427</izz>
+        </inertia>
+      </inertial>
+      <visual name="camera_link_visual">
+        <geometry>
+          <box><size>
+            0.015 0.130 0.0222
+          </size></box>
+        </geometry>
+      </visual>
+
+      <collision name="camera_link_collision">
+        <geometry>
+          <box><size>
+            0.015 0.130 0.0222
+          </size></box>
+        </geometry>
+      </collision>
+
+      <sensor name="depth_camera" type="rgbd_camera">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>5.0</update_rate>
+        <topic>depth_camera</topic>
+        <gz_frame_id>camera_link</gz_frame_id>
+        <camera>
+          <horizontal_fov>1.047198</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>3</far>
+          </clip>
+        </camera>
+        <baseline>0.2</baseline>
+        <pointCloudCutoff>0.5</pointCloudCutoff>
+        <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+        <distortionK1>0</distortionK1>
+        <distortionK2>0</distortionK2>
+        <distortionK3>0</distortionK3>
+        <distortionT1>0</distortionT1>
+        <distortionT2>0</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0</Cx>
+        <Cy>0</Cy>
+        <focalLength>0</focalLength>
+        <hackBaseline>0</hackBaseline>
+      </sensor>
+    </link>
+    <joint name="camera_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>camera_link</child>
+      <pose relative_to="base_link">0.165 0 -0.02 0 0 0</pose>
+    </joint>
+    <!-- <joint name="ball_catcher_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>ball_catcher_link</child>
+    </joint> -->
+    <plugin filename = "gz-sim-odometry-publisher-system" name = "gz::sim::systems::OdometryPublisher">
+      <odom_frame>x500_lidar_down/odom</odom_frame>
+      <robot_base_frame>x500_lidar_down/base_link</robot_base_frame>    
+    </plugin>
+  </model>
+  
+</sdf>
